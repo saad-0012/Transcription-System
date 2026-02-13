@@ -1,9 +1,7 @@
-
 let currentTaskId = null;
 let pollInterval = null;
 let transcriptData = [];
 let player = null; // YT Player
-let videoElem = null; // HTML5 Video
 
 // --- API Calls ---
 
@@ -20,9 +18,12 @@ async function submitYoutube() {
 }
 
 async function submitFile() {
-    const file = document.getElementById('fileInput').files[0];
+    const fileInput = document.getElementById('fileInput');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        return alert("Please select a file first.");
+    }
+    const file = fileInput.files[0];
     const lang = document.getElementById('fileLang').value;
-    if(!file) return alert("Select file");
 
     const formData = new FormData();
     formData.append('file', file);
@@ -32,32 +33,41 @@ async function submitFile() {
 }
 
 async function startTask(endpoint, formData) {
-    document.getElementById('statusMsg').classList.remove('hidden');
-    document.getElementById('statusMsg').innerText = "Uploading & initializing...";
+    const statusDiv = document.getElementById('statusMsg');
+    statusDiv.classList.remove('hidden');
+    statusDiv.innerText = "Uploading & initializing... (Please wait)";
     
     try {
         const res = await fetch(endpoint, { method: 'POST', body: formData });
+        if (!res.ok) throw new Error("Server Error: " + res.statusText);
+        
         const data = await res.json();
         currentTaskId = data.task_id;
         pollStatus();
     } catch (e) {
-        alert("Error starting task: " + e);
+        statusDiv.innerText = "Error: " + e.message;
+        alert("Error starting task: " + e.message);
     }
 }
 
 function pollStatus() {
     pollInterval = setInterval(async () => {
-        const res = await fetch(`/api/status/${currentTaskId}`);
-        const data = await res.json();
+        try {
+            const res = await fetch(`/api/status/${currentTaskId}`);
+            const data = await res.json();
 
-        document.getElementById('statusMsg').innerText = `Status: ${data.status.toUpperCase()}`;
+            document.getElementById('statusMsg').innerText = `Status: ${data.status.toUpperCase()}`;
 
-        if (data.status === 'completed') {
-            clearInterval(pollInterval);
-            loadWorkspace(data);
-        } else if (data.status === 'failed') {
-            clearInterval(pollInterval);
-            alert("Transcription failed.");
+            if (data.status === 'completed') {
+                clearInterval(pollInterval);
+                loadWorkspace(data);
+            } else if (data.status === 'failed') {
+                clearInterval(pollInterval);
+                document.getElementById('statusMsg').innerText = "Transcription Failed. Check console/logs.";
+                alert("Transcription failed.");
+            }
+        } catch (e) {
+            console.error("Polling error", e);
         }
     }, 2000);
 }
@@ -66,46 +76,30 @@ function pollStatus() {
 
 function loadWorkspace(data) {
     document.getElementById('workspace').classList.remove('hidden');
-    document.getElementById('videoTitle').innerText = data.video_title;
+    document.getElementById('videoTitle').innerText = data.video_title || "Processed Video";
     document.getElementById('summaryText').innerText = data.summary || "No summary available.";
     
-    transcriptData = data.transcript;
+    transcriptData = data.transcript || [];
     renderTranscript();
     setupPlayer(data);
 }
 
 function setupPlayer(data) {
     const container = document.getElementById('videoContainer');
-    container.innerHTML = ''; // Clear placeholder
+    container.innerHTML = ''; 
 
-    // Check if YouTube (simple check)
-    // Note: In a real app, we'd pass the actual YT ID from backend. 
-    // For this demo, we assume embedded logic or handle file uploads.
-    // Since task requires embedding:
-    
-    // IF we had the video URL stored, we could parse ID.
-    // For simplicity in this demo, if it's an upload, we might not play it 
-    // unless we serve the file back. 
-    
-    // Implementing a dummy player state for text-sync demo if file not servable,
-    // or embedding YT if possible.
-    
-    if (data.video_title.includes("Unknown") || !data.video_title) {
+    // Simple check to decide if we show YT iframe or a Placeholder
+    // (Real implementation would pass YT ID properly)
+    if (data.video_source === 'youtube' || (data.video_url && data.video_url.includes('youtube'))) {
         container.innerHTML = '<iframe id="ytplayer" type="text/html" width="100%" height="100%" src="https://www.youtube.com/embed/?enablejsapi=1" frameborder="0"></iframe>';
-        // Initialize YT Player API
-        player = new YT.Player('ytplayer', {
-            events: { 'onStateChange': onPlayerStateChange }
-        });
+        // Initialize YT Player API if loaded
+        if (window.YT && window.YT.Player) {
+            player = new YT.Player('ytplayer', {
+                events: { 'onStateChange': () => {} }
+            });
+        }
     } else {
-        // Assume it is a local file upload simulation or we don't have playback 
-        // strictly wired for local files in this script without static serving setup for uploads.
-        // We will just show a "Player Simulation" for the interactive text.
-        container.innerHTML = '<div class="text-center p-10 text-gray-500">Video Playback<br>(Sync Simulation Active)</div>';
-        
-        // Mock timer for simulation
-        setInterval(() => {
-            // Mock time update for demo purposes if no real video
-        }, 1000);
+        container.innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 bg-gray-900">Video Sync Simulation<br>(Local File Mode)</div>';
     }
 }
 
@@ -113,9 +107,14 @@ function renderTranscript() {
     const container = document.getElementById('transcriptContainer');
     container.innerHTML = '';
 
+    if (!transcriptData || transcriptData.length === 0) {
+        container.innerHTML = '<div class="p-4 text-gray-500">No transcript segments found.</div>';
+        return;
+    }
+
     transcriptData.forEach((seg, index) => {
         const div = document.createElement('div');
-        div.className = "transcript-line p-2 rounded transition border-l-2 border-transparent";
+        div.className = "transcript-line p-2 rounded transition border-l-2 border-transparent hover:bg-blue-50";
         div.id = `seg-${index}`;
         div.dataset.start = seg.start;
         
@@ -124,9 +123,9 @@ function renderTranscript() {
         div.innerHTML = `
             <div class="flex gap-2 mb-1">
                 <span onclick="seekVideo(${seg.start})" class="text-blue-600 font-mono text-xs font-bold cursor-pointer hover:underline">[${timestamp}]</span>
-                <span class="text-xs font-bold text-gray-600">${seg.speaker}</span>
+                <span class="text-xs font-bold text-gray-600">${seg.speaker || 'Speaker'}</span>
             </div>
-            <p contenteditable="true" onblur="updateText(${index}, this.innerText)" class="text-sm leading-relaxed outline-none focus:bg-white">${seg.text}</p>
+            <p contenteditable="true" onblur="updateText(${index}, this.innerText)" class="text-sm leading-relaxed outline-none focus:bg-white border border-transparent focus:border-gray-200 p-1 rounded">${seg.text}</p>
         `;
         
         container.appendChild(div);
@@ -140,44 +139,46 @@ function formatTime(seconds) {
 }
 
 function updateText(index, newText) {
-    transcriptData[index].text = newText;
+    if (transcriptData[index]) {
+        transcriptData[index].text = newText;
+    }
 }
 
 async function saveChanges() {
-    await fetch(`/api/update/${currentTaskId}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ segments: transcriptData })
-    });
-    alert("Changes saved!");
+    if (!currentTaskId) return;
+    try {
+        await fetch(`/api/update/${currentTaskId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ segments: transcriptData })
+        });
+        alert("Changes saved to database!");
+    } catch (e) {
+        alert("Save failed: " + e);
+    }
 }
 
 // --- Export Logic ---
 
 function downloadFormat(format) {
     let content = "";
+    
+    // Using explicit string concatenation to avoid syntax errors with backslashes
     if (format === 'srt') {
         transcriptData.forEach((seg, i) => {
-            content += `${i+1}
-${formatTimeSRT(seg.start)} --> ${formatTimeSRT(seg.end)}
-${seg.text}
-
-`;
+            content += (i + 1) + "\n";
+            content += formatTimeSRT(seg.start) + " --> " + formatTimeSRT(seg.end) + "\n";
+            content += seg.text + "\n\n";
         });
     } else if (format === 'txt') {
         transcriptData.forEach(seg => {
-            content += `[${formatTime(seg.start)}] ${seg.speaker}: ${seg.text}
-`;
+            content += "[" + formatTime(seg.start) + "] " + seg.speaker + ": " + seg.text + "\n";
         });
     } else if (format === 'vtt') {
-        content = "WEBVTT
-
-";
+        content = "WEBVTT\n\n";
         transcriptData.forEach((seg) => {
-            content += `${formatTimeSRT(seg.start)} --> ${formatTimeSRT(seg.end)}
-${seg.text}
-
-`;
+            content += formatTimeSRT(seg.start) + " --> " + formatTimeSRT(seg.end) + "\n";
+            content += seg.text + "\n\n";
         });
     }
 
@@ -186,25 +187,31 @@ ${seg.text}
     const a = document.createElement('a');
     a.href = url;
     a.download = `transcript.${format}`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
 }
 
 function formatTimeSRT(seconds) {
-    // HH:MM:SS,ms
+    if (!seconds && seconds !== 0) return "00:00:00,000";
     const date = new Date(0);
     date.setSeconds(seconds);
     const iso = date.toISOString().substr(11, 8);
-    return `${iso},000`; // simple ms
+    return iso + ",000"; 
 }
 
 function seekVideo(time) {
-    if (player && player.seekTo) {
-        player.seekTo(time);
+    if (player && typeof player.seekTo === 'function') {
+        player.seekTo(time, true);
     }
-    // Highlight segment
-    document.querySelectorAll('.transcript-line').forEach(el => el.classList.remove('active-segment'));
-    // Find closest
+    
+    // UI Highlight
+    document.querySelectorAll('.transcript-line').forEach(el => el.classList.remove('active-segment', 'bg-blue-100'));
     const segs = Array.from(document.querySelectorAll('.transcript-line'));
-    const active = segs.find(el => parseFloat(el.dataset.start) >= time);
-    if(active) active.classList.add('active-segment');
+    const active = segs.find(el => {
+        const start = parseFloat(el.dataset.start);
+        return start <= time && (start + 5) >= time; // Approximate active window
+    });
+    if(active) active.classList.add('active-segment', 'bg-blue-100');
 }

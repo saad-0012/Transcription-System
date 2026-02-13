@@ -1,0 +1,68 @@
+1
+00:00:00,000 --> 00:00:05,160
+India is a nation marked by an incredible linguistic diversity and inclusive vision.
+
+2
+00:00:06,640 --> 00:00:13,780
+This ancient land is transforming itself into a Vixit Bharat with knowledge and technology as key enablers.
+
+3
+00:00:15,260 --> 00:00:22,080
+Contributing towards this mission is Vikaspedia, a technology initiative that harnesses collective wisdom
+
+4
+00:00:22,080 --> 00:00:27,280
+to promote multilingual open knowledge repositories for an inclusive cyberspace.
+
+5
+00:00:27,280 --> 00:00:34,460
+Vikaspedia is an initiative of the Ministry of Electronics and IT, Government of India
+
+6
+00:00:34,460 --> 00:00:39,660
+and executed by Centre for Development of Advanced Computing.
+
+7
+00:00:40,340 --> 00:00:45,320
+It fosters an AI-augmented multi-stakeholder digital ecosystem.
+
+8
+00:00:46,340 --> 00:00:54,960
+This robust and user-centric ecosystem is powered by technology, capacities, knowledge and sustainability enablers.
+
+9
+00:00:54,960 --> 00:01:05,500
+The heart of the initiative is Vikaspedia's AI-enabled Multilingual, Multimodal and Multisectoral Collaborative Knowledge-Sharing Framework.
+
+10
+00:01:05,500 --> 00:01:21,020
+The framework supports a suite of AI tools to augment content authoring, digitization, translation, review, discovery and delivery of digital resources in 20 to constitutionally recognized languages of the country.
+
+11
+00:01:21,020 --> 00:01:24,020
+It is designed to harness the collective wisdom of the community.
+
+12
+00:01:24,020 --> 00:01:28,020
+It is designed to harness the collective wisdom of the linguistically and culturally diverse Bharat.
+
+13
+00:01:30,020 --> 00:01:40,020
+The framework caters to a one-stop platform, hosting diverse information on multiple sectors and is developed using microservices-based architecture.
+
+14
+00:01:41,020 --> 00:01:50,020
+It follows a mobile-first approach, supporting multiple media formats and has rich user engagement features, including accessibility tools.
+
+15
+00:01:51,020 --> 00:01:53,020
+Let's connect, collaborate, communicate and share.
+
+16
+00:01:54,020 --> 00:01:56,020
+Let's communicate and co-create for a Vixit Bharat.
+
+17
+00:01:57,020 --> 00:02:02,020
+We are thankful to the Ministry of Electronics and IT for supporting this initiative.
+

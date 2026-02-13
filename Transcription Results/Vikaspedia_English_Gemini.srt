@@ -1,0 +1,95 @@
+1
+00:00:00,000 --> 00:00:06,000
+Speaker 1: India is a nation marked by an incredible linguistic diversity and an inclusive vision.
+
+2
+00:00:06,000 --> 00:00:10,000
+Speaker 1: This ancient land is transforming itself into a Viksit Bharat,
+
+3
+00:00:10,000 --> 00:00:15,000
+Speaker 1: with knowledge and technology as key enablers.
+
+4
+00:00:15,000 --> 00:00:19,000
+Speaker 1: Contributing towards this mission is Vikas Pedia, a technology initiative
+
+5
+00:00:19,000 --> 00:00:25,000
+Speaker 1: that harnesses collective wisdom to promote multilingual open knowledge repositories
+
+6
+00:00:25,000 --> 00:00:29,000
+Speaker 1: for an inclusive cyber space.
+
+7
+00:00:29,000 --> 00:00:35,000
+Speaker 1: Vikas Pedia is an initiative of the Ministry of Electronics and IT, Government of India,
+
+8
+00:00:35,000 --> 00:00:41,000
+Speaker 1: and executed by Centre for Development of Advanced Computing.
+
+9
+00:00:41,000 --> 00:00:47,000
+Speaker 1: It fosters an AI augmented multi-stakeholder digital ecosystem.
+
+10
+00:00:47,000 --> 00:00:51,000
+Speaker 1: This robust and user-centric ecosystem is powered by technology,
+
+11
+00:00:51,000 --> 00:00:56,000
+Speaker 1: capacities, knowledge and sustainability enablers.
+
+12
+00:00:56,000 --> 00:01:01,000
+Speaker 1: The heart of the initiative is Vikas Pedia's AI enabled multilingual,
+
+13
+00:01:01,000 --> 00:01:06,000
+Speaker 1: multimodal and multisectoral collaborative knowledge sharing framework.
+
+14
+00:01:06,000 --> 00:01:12,000
+Speaker 1: The framework supports a suite of AI tools to augment content authoring,
+
+15
+00:01:12,000 --> 00:01:17,000
+Speaker 1: digitization, translation, review, discovery and delivery of digital resources
+
+16
+00:01:17,000 --> 00:01:22,000
+Speaker 1: in 22 constitutionally recognized languages of the country.
+
+17
+00:01:22,000 --> 00:01:26,000
+Speaker 1: It is designed to harness the collective wisdom of the linguistically
+
+18
+00:01:26,000 --> 00:01:29,000
+Speaker 1: and culturally diverse Bharat.
+
+19
+00:01:29,000 --> 00:01:34,000
+Speaker 1: The framework caters to a one-stop platform, hosting diverse information
+
+20
+00:01:34,000 --> 00:01:40,000
+Speaker 1: on multiple sectors and is developed using microservices based architecture.
+
+21
+00:01:40,000 --> 00:01:46,000
+Speaker 1: It follows a mobile first approach, supporting multiple media formats
+
+22
+00:01:46,000 --> 00:01:51,000
+Speaker 1: and has rich user engagement features including accessibility tools.
+
+23
+00:01:51,000 --> 00:01:57,000
+Speaker 1: Let's connect, collaborate, communicate and co-create for a Viksit Bharat.
+
+24
+00:01:57,000 --> 00:02:00,000
+Speaker 1: We are thankful to the Ministry of Electronics and IT for supporting this initiative.
